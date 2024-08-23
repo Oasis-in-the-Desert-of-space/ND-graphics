@@ -1,0 +1,546 @@
+<html>
+  <head>
+    <style>
+        body {margin: 0;}
+        canvas {background: rgb(0, 0, 0);}
+        .info-piece{
+            margin: 5px;
+            padding: 15px;
+            border-radius: 15px;
+            background: rgb(54, 24, 98);
+            color: white;
+            font-family: 'Courier New', Courier, monospace;
+        }
+        .range-input {
+            margin-bottom: 40px;
+        }
+        #info {
+            display: flex;
+            flex-direction: column;
+            position: absolute;
+            top: 30px;
+            left: 30px;
+        }
+        #camera-info {
+            display: flex;
+            flex-direction: column;
+            position: absolute;
+            top: 30px;
+            right: 30px;
+        }
+
+    </style>
+  </head>
+  <body>
+    <canvas id = "c1"></canvas>
+    <div id="info">
+        <div style="background: rgb(185, 150, 150); padding: 5px; border-radius: 5px;">
+        Performance
+        <div id="frame-rate" class="info-piece"></div>
+        <div id="number-multiplications" class="info-piece"></div>
+        </div>
+
+        <div class="info-piece" style="display: flex;§q">
+            <div id="current-dimensions">Dimensions:</div>
+            <input  id='dim-input' type="number" value="3" oninput="cubeDims=Number(this.value);" style="width: 50px;">
+        </div>
+
+        <div class="info-piece">
+            <div id="current-size">Size: 1</div>
+            <input  id='size-input' step='0.1' type="range" min="0.1" max="1000" value="5" oninput="cubeSize=Number(this.value); document.getElementById('current-size').innerText = `Size: ${this.value} `">
+        </div>
+        
+        <div class="info-piece">
+            <div id="current-offset">offsetFactor: 2</div>
+            <input  id='offset-input' type="range" step="0.1" min="1" max="20" value="2" oninput="offsetFactor=Number(this.value); document.getElementById('current-offset').innerText = `offsetFactor: ${this.value}`">
+        </div>
+        <div class="info-piece">
+            number
+            <div style="display: flex; flex-direction: column;">
+                <input type="number" id="n-0" value="1" style="width: 80px;">
+                <input type="number" id="n-1" value="1" style="width: 80px;">
+                <input type="number" id="n-2" value="1" style="width: 80px;">
+                <input type="number" id="n-3" value="1" style="width: 80px;">
+                <input type="number" id="n-4" value="1" style="width: 80px;">
+                <input type="number" id="n-5" value="1" style="width: 80px;">
+                <input type="number" id="n-6" value="1" style="width: 80px;">
+                <input type="number" id="n-7" value="1" style="width: 80px;">
+                <input type="number" id="n-8" value="1" style="width: 0px;">
+                <input type="number" id="n-9" value="1" style="width: 80px;">
+                <input type="number" id="n-10" value="1" style="width: 80px;">
+                <input type="number" id="n-11" value="1" style="width: 80px;">
+            </div>
+        </div>     
+        <div class="info-piece">
+            rotations
+            <div style="display: flex; flex-direction: column;">
+                <input type="checkbox" id="rotation-0" value='on'>
+                <input type="checkbox" id="rotation-1" value='on'>
+                <input type="checkbox" id="rotation-2">
+                <input type="checkbox" id="rotation-3">
+                <input type="checkbox" id="rotation-4">
+                <input type="checkbox" id="rotation-5">
+                <input type="checkbox" id="rotation-6">
+                <input type="checkbox" id="rotation-7">
+                <input type="checkbox" id="rotation-8">
+                <input type="checkbox" id="rotation-9">
+                <input type="checkbox" id="rotation-10">
+                <input type="checkbox" id="rotation-11">
+            </div>
+        </div>     
+        <div class="info-piece">
+            color:
+            <input type="checkbox" id="color-checkbox">
+            <input type="range" id="brightness" min="0.1" max="10.0" value="1" step="0.1">
+        </div>
+    </div>
+    <div id="camera-info">
+        <div class="info-piece">
+            focal Lengths
+            <div style="display: flex; flex-direction: column;">
+                <input type="number" id="camera-focal-length-0" value="1" style="width: 70px;">
+                <input type="number" id="camera-focal-length-1" value="1" style="width: 70px;">
+                <input type="number" id="camera-focal-length-2" value="1000" style="width: 70px;">
+                <input type="number" id="camera-focal-length-3" value="10" style="width: 70px;">
+                <input type="number" id="camera-focal-length-4" value="1" style="width: 70px;">
+                <input type="number" id="camera-focal-length-5" value="1" style="width: 70px;">
+                <input type="number" id="camera-focal-length-6" value="1" style="width: 70px;">
+                <input type="number" id="camera-focal-length-7" value="1" style="width: 70px;">
+                <input type="number" id="camera-focal-length-8" value="1" style="width: 70px;">
+                <input type="number" id="camera-focal-length-9" value="1" style="width: 70px;">
+                <input type="number" id="camera-focal-length-10" value="1" style="width: 70px;">
+                <input type="number" id="camera-focal-length-11" value="1" style="width: 70px;">
+                <input type="range" id="zoom" min="1" max="100" value="1" step="0.1">
+            </div>
+        </div>
+        <div class="info-piece">
+            camera position
+            <div style="display: flex; flex-direction: column;">
+                <input type="number" id="camera-position-0" value="-10" style="width: 70px;">
+                <input type="number" id="camera-position-1" value="-10" style="width: 70px;">
+                <input type="number" id="camera-position-2" value="-10" style="width: 70px;">
+                <input type="number" id="camera-position-3" value="-10" style="width: 70px;">
+                <input type="number" id="camera-position-4" value="-10" style="width: 70px;">
+                <input type="number" id="camera-position-5" value="-10" style="width: 70px;">
+                <input type="number" id="camera-position-6" value="-10" style="width: 70px;">
+                <input type="number" id="camera-position-7" value="-10" style="width: 70px;">
+                <input type="number" id="camera-position-8" value="-10" style="width: 70px;">
+                <input type="number" id="camera-position-9" value="-10" style="width: 70px;">
+                <input type="number" id="camera-position-10" value="-10" style="width: 70px;">
+                <input type="number" id="camera-position-11" value="-10" style="width: 70px;">
+                <input type="range" id="distance" min="1" max="100" value="1" step="0.1">
+            </div>
+        
+        </div>
+        <div class="info-piece">
+            camera rotation
+            <div style="display: flex; flex-direction: column;">
+                <input type="number" id="camera-rotation-0" value="10" style="width: 70px;">
+                <input type="number" id="camera-rotation-1" value="10" style="width: 70px;">
+                <input type="number" id="camera-rotation-2" value="10" style="width: 70px;">
+                <input type="number" id="camera-rotation-3" value="10" style="width: 70px;">
+                <input type="number" id="camera-rotation-4" value="10" style="width: 70px;">
+                <input type="number" id="camera-rotation-5" value="10" style="width: 70px;">
+                <input type="number" id="camera-rotation-6" value="10" style="width: 70px;">
+                <input type="number" id="camera-rotation-7" value="10" style="width: 70px;">
+                <input type="number" id="camera-rotation-8" value="10" style="width: 70px;">
+                <input type="number" id="camera-rotation-9" value="10" style="width: 70px;">
+                <input type="number" id="camera-rotation-10" value="10" style="width: 70px;">
+                <input type="number" id="camera-rotation-11" value="10" style="width: 70px;">
+            </div>
+        </div>
+    </div>
+  </body>
+
+</html>
+
+
+<!-- This is a four dimensional cube, otherwise called a hyper-cube or a tesseract. Just note this is technically a tesseract because our screens are two dimensional and cannot hold three dimensional objects. Instead this is just a tesseract projected into three dimensions, and then into two dimensions. Also we are three dimensional creatures, so it is not possible for us to imagine the fourth dimension. -->
+
+
+<!-- Include math.js from CDN -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/10.0.0/math.min.js"></script>
+<script src="https://unpkg.com/gpu.js"></script>
+
+<script>
+
+
+    
+
+
+    class CameraND {
+        constructor(focalLengths, position, rotation){
+            this.focalLengths = focalLengths;
+            this.position = position;
+            this.rotation = rotation;
+        }
+
+        rotate(rotation){
+            //Implement
+        }
+    }
+
+    class VertexND {
+        constructor(n, position) {
+            this.n = n;
+            this.loc = position;
+            this.ploc = [];
+        }
+
+        rotate(rotation){
+            ///IMPLEMENT
+            let location = this.loc;
+            for (let i=0; i<this.n; i++){
+                if (rotation[i]>0){
+                    //create rotation Matrix of size n*n
+                    let rotationMatrix = []
+                    for (let r = 0; r < this.n; r++){
+                        let row = [];
+                        for (let c = 0; c< this.n; c++){
+                            if (i == c && i == r){row.push(1)} 
+                            else if (i == c || i == r){row.push(0)}
+                            else if (r == (i+1)%this.n){
+                                if (r==c){row.push(Math.cos(rotation[i]))}
+                                else if (c==(i+2)%this.n){row.push(Math.sin(rotation[i]))}
+                                else {row.push(0)}
+                            } else if (r == (i+2)%this.n){
+                                if (r==c){row.push(Math.cos(rotation[i]))}
+                                else if (c==(i+1)%this.n){row.push(-Math.sin(rotation[i]))}
+                                else {row.push(0)}
+                            } else if (r == c) {row.push(1)}
+                            else {row.push(0)}
+                        
+                        }
+                        rotationMatrix.push(row);
+                    }
+                    let rotated = math.multiply(location,rotationMatrix)
+                    multiplications += 1
+                    location = rotated;
+                }
+
+            }
+            this.loc = location;    
+        }
+
+        project(){
+            let location = this.loc;
+            // iterate through dimensions to project one dim at a time until 2D
+            for (let n=this.n; n>3; n--){
+
+                location[n-1] -= camera.position[n-1]
+
+                //create Projection matrix of size n*n-1
+                let projectionMatrix = []
+                for (let r = 1; r <= n; r++){
+                    let row = [];
+                    for (let c = 1; c<=n-1; c++){
+                        row.push(c == r ? 1/(camera.focalLengths[n-1]-location[n-1]) : 0)
+                    }
+                    projectionMatrix.push(row);
+                }
+                let reduced = math.multiply(location, projectionMatrix)
+                multiplications += 1
+                location = reduced;
+            }
+            
+            let ploc = perspectiveProjection(location, camera)
+            this.ploc = ploc;
+                    
+        }
+
+
+    }
+
+    //Edge Object
+    class Edge {
+        constructor(v1, v2, noCull) {
+            this.vertices = [v1, v2];
+            if (noCull == true) this.noCull = noCull;
+        }
+        show(color) {
+            if ((Math.abs(this.vertices[0].ploc[0])>canvas_element.width || Math.abs(this.vertices[0].ploc[1])>canvas_element.height) || (Math.abs(this.vertices[1].ploc[0])>canvas_element.width || Math.abs(this.vertices[1].ploc[1])>canvas_element.height)){
+            } else {
+                //Drawing Face
+                canvas.strokeStyle = color;
+                canvas.beginPath();
+                canvas.moveTo(this.vertices[0].ploc[0], this.vertices[0].ploc[1]);
+                canvas.lineTo(this.vertices[1].ploc[0], this.vertices[1].ploc[1]);
+                canvas.stroke();
+            }
+        }
+    }
+
+    class CubeND {
+        constructor(n, offset, rotation, size, color) {
+            this.n = n;
+            this.size = size;
+            this.rotation = rotation;
+            this.offset = offset;
+            this.color = color;
+            this.vertices = [];
+            this.edges = [];
+            this.baseVectors = [];
+            this.offset = offset;
+            this.initVertices();
+            this.initEdges();
+            //this.show();
+        }
+
+        initVertices() {
+
+            // Helper function to generate all combinations recursively
+            const helper = (current) => {
+                if (current.length === this.n) {
+                    this.baseVectors.push([...current]);
+                    
+                    let current_cop = [...current]
+                    
+                    //offset vector
+                    for (let i = 0; i < this.n; i++){
+                        current_cop[i] *= this.size/2
+                        current_cop[i] += this.offset[i];
+                    }
+                    
+                    let vertex = new VertexND(this.n, current_cop)
+                    
+                    this.vertices.push(vertex); // Add vertex to cube
+                    return;
+                }
+
+                // Recursive case: push 1 and -1 and continue
+                current.push(1);
+                helper(current);
+                current.pop();
+                
+                current.push(-1);
+                helper(current);
+                current.pop();
+            }
+
+            // Start recursion with an empty array
+            helper([]);
+            
+        }
+
+
+        initEdges(){
+            for (let i = 0; i < 2**this.n; i++){
+                for (let j = i; j < 2**this.n; j++){
+                    const ElementSums = this.baseVectors[i].map((num, index) => num + this.baseVectors[j][index]);
+                    
+                    if (ElementSums.reduce((accumulator, currentValue) => accumulator + Math.abs(currentValue), 0) == (this.n-1)*2){
+                        this.edges.push(new Edge(this.vertices[i], this.vertices[j]))
+                    }
+
+                }
+            }
+        }
+
+        show(){
+            for (let i = 0; i < this.edges.length; i++) {
+                this.edges[i].show(this.color);
+            }
+            
+        }
+
+    }
+
+
+
+    function perspectiveProjection(point, camera) {
+        let near = 200;
+        let far = 100000;
+        let aspect = 1;
+        let f = camera.focalLengths[2];
+        let rangeInv = 1 / (near - far);
+        point [2] -= camera.position[2]
+
+
+        /*
+       let projectedPoint = [
+            point[0] * (f/aspect) + point[2] * (far + near) * rangeInv,
+            point[1] * f + point[2] * (far + near) * rangeInv,
+            point[2] * (far + near) * rangeInv + 2 * far * near * rangeInv,
+            point[2] * -1
+       ]
+       */
+       let projectedPoint = [
+            point[0] * (f/aspect) + point[2],
+            point[1] * f + point[2],
+            point[2] + 2,
+            point[2] * -1
+       ]
+
+        // Perform perspective divide
+        if (projectedPoint[3] !== 0) {
+            projectedPoint[0] /= projectedPoint[3];
+            projectedPoint[1] /= projectedPoint[3];
+            projectedPoint[2] /= projectedPoint[3];
+        }
+
+        return [projectedPoint[0], projectedPoint[1]]; // Return only the x and y for 2D visualization
+    }
+
+
+
+
+</script>
+
+
+
+<script>
+    let multiplications = 0;
+    //Canvas
+    const canvas_element = document.getElementById('c1');
+    const canvas = canvas_element.getContext('2d');
+    //Pixel Dimensions
+    canvas_element.width = window.innerWidth;
+    canvas_element.height = window.innerHeight;
+    canvas.translate(canvas_element.width/2, canvas_element.height/2);
+    
+    
+    
+    let cameraFocalLengths = [100,100,10,5,5, 1000, 1000, 1000, 1000, 100, 100, 100];
+    let cameraPosition = [0,0,10,10,10,10,10,10,10,10,10,0]
+    let cameraRotation = [0,0,0,0,0,0,0,0,0,0,0,0]
+
+    
+    let r = [0,0,0,0,0,0,0,0,0,0,0,0]
+
+    let n = [1,1,1,1,1,1,1,1,1,1,1,1]
+    
+    let cubeDims = 3;
+    let cubeSize = 10;
+    let offsetFactor = 3;
+
+
+
+    //Performance measure:
+    let lastFrameTime = performance.now();
+    let frameCount = 0;
+    let fps = 0;
+
+
+    let camera =  new CameraND(cameraFocalLengths, cameraPosition, cameraRotation);
+
+    let zoom = 1;
+    let distance = 1;
+    let brightness = 1;
+
+    
+    function draw() {
+        requestAnimationFrame(draw);
+
+        ///PERFORMANCE --------
+        // Current time in milliseconds
+        const now = performance.now();
+        // Time difference in seconds
+        const deltaTime = (now - lastFrameTime) / 1000;
+        // Update the frame count
+        frameCount++;
+        // Update FPS every second
+        if (deltaTime >= 1) {
+            // Calculate the number of frames per second
+            fps = frameCount / deltaTime;
+            // Log or update the FPS display
+            document.getElementById('frame-rate').innerText = `FPS: ${fps}`
+            // Reset timer and frame count
+            lastFrameTime = now;
+            frameCount = 0;
+        }
+        multiplications = 0
+
+
+        zoom = document.getElementById('zoom').value;
+        distance = document.getElementById('distance').value
+        brightness = document.getElementById('brightness').value
+
+        for (let i = 0; i < cameraFocalLengths.length; i++){
+            let id = 'camera-focal-length-'+ i
+            cameraFocalLengths[i] = document.getElementById(id).value * zoom
+        }
+        for (let i = 0; i < cameraPosition.length; i++){
+            let id = 'camera-position-'+ i
+            cameraPosition[i] = document.getElementById(id).value * distance
+        }
+        for (let i = 0; i < cameraRotation.length; i++){
+            let id = 'camera-rotation-'+ i
+            cameraRotation[i] = document.getElementById(id).value
+        }
+        
+        
+
+        camera =  new CameraND(cameraFocalLengths, cameraPosition, cameraRotation);
+
+        cubeSize = document.getElementById('size-input').value
+
+        
+        for (let i = 0; i < r.length; i++){
+            let id = 'rotation-'+ i
+            if (document.getElementById(id).checked){
+                r[i] += 0.003;
+            }
+        }
+        
+        for (let i = 0; i < n.length; i++){
+            let id = 'n-'+ i
+            n[i] = document.getElementById(id).value;
+        }
+        
+        
+        cubes = [];
+        
+        canvas.clearRect(-canvas_element.width/2, -canvas_element.height/2, canvas_element.width, canvas_element.height);
+
+        canvas.lineWidth = 1.5;
+                
+        canvas.strokeStyle = 'rgba(100, 200, 0, 1)';
+        for (let a = 0; a <n[0]; a++){
+            for (let b = 0; b <n[1]; b++){
+                for (let c = 0; c < n[2]; c++){
+                    for (let d = 0; d< n[3]; d++) {
+                        for (let e = 0; e< n[4]; e++){
+                            for (let f = 0; f< n[5]; f++){
+                                for (let g = 0; g<n[6]; g++){
+                                    if (document.getElementById('color-checkbox').checked){
+                                        color = `rgba(${brightness*(a*(255/n[0])+20)}, ${brightness*(b*(255/n[1]))}, ${brightness*(d*(255/n[3]))}, 1)`; // Red lines
+                                    } else {
+                                        color = 'rgba(255, 255, 255, 1)';
+                                    }
+                                    if (a==1 && b==3 && c==2 && e == 2){
+                                        color = 'rgba(255, 255, 255, 1)';
+                                    }
+                                    cubes.push(new CubeND(cubeDims, [(a-(n[0]-1)/2)*(cubeSize*offsetFactor), (b-(n[1]-1)/2)*(cubeSize*offsetFactor), (c-(n[2]-1)/2)*(cubeSize*offsetFactor), (d-(n[3]-1)/2)*(cubeSize*offsetFactor), (e-(n[4]-1)/2)*(cubeSize*offsetFactor), (f-(n[5]-1)/2)*(cubeSize*offsetFactor), (g-(n[6]-1)/2)*(cubeSize*offsetFactor),0,0,0,0], r ,cubeSize, color))
+                                }
+                            }
+                        }
+                    } 
+                    
+                }
+            }
+        }
+        cubes.forEach((cube) => {
+
+            if (cube.rotation.reduce((acc, value) => acc + Math.abs(value), 0) > 0){
+                cube.vertices.forEach((vertex) => {
+                    vertex.rotate(cube.rotation);
+                    vertex.project();
+                })
+            } else {
+                cube.vertices.forEach((vertex) => {
+                    vertex.project();
+                })
+            }
+
+            cube.show();
+        })
+
+        document.getElementById('number-multiplications').innerText = `${multiplications} multiplications`;
+         
+        
+        //IMPLEMENT ND CUBE Generation
+
+    }
+    draw(); // Initiate the drawing function
+</script>
+
